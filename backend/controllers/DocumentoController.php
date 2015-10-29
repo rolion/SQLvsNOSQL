@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 use backend\models\Persona;
+use backend\models\PersonaSearch;
 
 /**
  * DocumentoController implements the CRUD actions for Documento model.
@@ -33,15 +34,42 @@ class DocumentoController extends Controller
      * Lists all Documento models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($mensaje="")
     {
         $searchModel = new DocumentoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $persona=new Persona();
+        $personaSearch=new PersonaSearch();
+        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider=new ActiveDataProvider([
+                    'query' => Persona::find()
+                        ->innerJoin('documento',
+                        '`documento`.`id_persona`=`persona`.`id`')
+                        ->groupBy('id'),
+                    'pagination' => [
+                        'pageSize' => 20,
+                    ],
+                ]);
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            'searchModel' => $personaSearch,
             'dataProvider' => $dataProvider,
+            'mensaje'=>$mensaje,
         ]);
+    }
+    public function actionIndexp(){
+        $model=new Documento();
+        if ($model->load(Yii::$app->request->post())) {
+                $dataProvider=new ActiveDataProvider([
+                    'query' => Documento::find()
+                        ->where(['id_persona'=>$model->id_persona])
+                        ->orderBy('id'),
+                    'pagination' => [
+                        'pageSize' => 1000000,
+                    ],
+                ]);
+             return $this->render('indexp',['model'=>$model,
+                 'dataProvider'=>$dataProvider]);
+        }
+        return $this->render('indexp',['model'=>$model,'dataProvider'=>NULL]);
     }
 
     /**
@@ -49,11 +77,18 @@ class DocumentoController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $mensaje="")
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $persona=  Persona::findOne($id);
+        $dataProvider=new ActiveDataProvider([
+                'query' => Documento::find()
+                ->where(['id_persona'=>$id])
+                ->orderBy('id'),]);
+        
+        return $this->render('view', 
+                ['dataProvider' => $dataProvider,
+                'persona'=>$persona,
+                'mensaje' =>  $mensaje]);
     }
 
     /**
@@ -61,7 +96,7 @@ class DocumentoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionViewpd($id){
+    public function actionViewpd($id,$mensaje=""){
         $persona=  Persona::findOne($id);
         $dataProvider=new ActiveDataProvider([
                 'query' => Documento::find()
@@ -70,38 +105,41 @@ class DocumentoController extends Controller
         
         return $this->render('viewpd', 
                 ['dataProvider' => $dataProvider,
-                'persona'=>$persona]);
+                'persona'=>$persona,
+                'mensaje' =>  $mensaje]);
     }
-    public function actionCreate()
-    {
+
+    public function actionCreate() {
+        set_time_limit(0);
+        $tiempo_de_inicio=  microtime(true);
         $model = new Documento();
-            //echo Yii::$app->request->post()[];
-        
-        if ($model->load(Yii::$app->request->post())  ) {
-            $model->docFile=  UploadedFile::getInstances($model, 'docFile');
-            foreach ($model->docFile as $i=>$file){
-                $documento=new Documento();
-                $documento->id_persona=$model->id_persona;
-                $documento->direccion_archivo=
-                        $file->baseName.'.'.
+        if ($model->load(Yii::$app->request->post())) {
+            $model->docFile = UploadedFile::getInstances($model, 'docFile');
+            foreach ($model->docFile as $i => $file) {
+                $documento = new Documento();
+                $documento->id_persona = $model->id_persona;
+                $documento->direccion_archivo = $file->baseName . '.' .
                         $file->extension;
-                $path=Yii::$app->basePath .'/web/imagenes/'.$documento->direccion_archivo;
-                $documento->nombre_documento=$file->baseName;
-                $documento->fecha_creacion=date('Y-m-d H:i:s');
+                $path = Yii::$app->basePath . '/web/imagenes/' . $documento->direccion_archivo;
+                $documento->nombre_documento = $file->baseName;
+                $documento->fecha_creacion = date('Y-m-d H:i:s');
                 $documento->save();
                 $file->saveAs($path);
             }
-//            $dataProvider=new ActiveDataProvider([
-//                'query' => Documento::find()->where(['id_persona'=>$model->id_persona])->orderBy('id'),]);
-            $this->redirect(['viewpd','id'=>$model->id_persona]);
-//            return $this->render('viewpd', 
-//                ['dataProvider' => $dataProvider,
-//                'persona'=>$model->idPersona]);
+            $tiempo_fin=  microtime(true);
+            $mensaje="Tiempo empleado para cargar datos: " .($tiempo_fin - $tiempo_de_inicio);
+        //return $this->render('Tiempo',['mensaje' =>$mensaje]);
+            $this->redirect(['view', 'id' => $model->id_persona,
+                'mensaje' =>  $mensaje
+                ]);
+            
         } else {
             return $this->render('create', [
-                'model' => $model,
+                        'model' => $model,
+                
             ]);
         }
+
     }
 
     /**
@@ -131,9 +169,19 @@ class DocumentoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $tiempo_de_inicio=  microtime(true);
+        $documento=Documento::find()->where(['id_persona'=>$id])->all();
+        foreach($documento as $i=>$doc){
+            $doc->delete();
+        }
+      //   Documento::deleteAll(['id_persona'=>$id]);//<----es mas rapido
+        $tiempo_fin=  microtime(true);
+        $mensaje="Tiempo empleado para eliminar: " .($tiempo_fin - $tiempo_de_inicio);
+       
+                //find()->where(['id_persona' =$id]);
+        //$this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'mensaje' =>  $mensaje]);
     }
 
     /**
