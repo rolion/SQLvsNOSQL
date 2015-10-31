@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'id'=>'grid',
         'tableOptions' =>['class' => 'table table-striped table-bordered',
-            'id'=>'table-id'],
+            'id'=>'grid'],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php 
 AppAsset::register($this);
-$this->registerJs('myscript.js',VIEW::EVENT_AFTER_RENDER);
+$this->registerJs('myscript.js',VIEW::POS_READY);
 ?>
 
 </div>

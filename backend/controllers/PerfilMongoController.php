@@ -9,12 +9,13 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-
+use  \yii\helpers\Json;
 /**
  * PerfilMongoController implements the CRUD actions for PerfilMongo model.
  */
 class PerfilMongoController extends Controller
 {
+    private static $idsEliminar=array();
     public function behaviors()
     {
         return [
@@ -26,7 +27,9 @@ class PerfilMongoController extends Controller
             ],
         ];
     }
-
+    public function actionSetIdsEliminar(){
+        self::$idsEliminar=Yii::$app->request->post('ids');
+    }
     /**
      * Lists all PerfilMongo models.
      * @return mixed
@@ -50,6 +53,10 @@ class PerfilMongoController extends Controller
     }
     public function actionIndex($mensaje="")
     {
+//        //if(strcmp($mensaje,"")==0)
+//            $mensaje=Yii::$app->request->post('mensaje');
+//        if(strcmp($mensaje,"")==0)
+//            $mensaje=  Yii::$app->request->post('mensaje');
         $searchModel = new PerfilMongoSearch();
         $dataProvider = new ActiveDataProvider([
                     'query' => PerfilMongo::find()->orderBy('_id'),
@@ -131,6 +138,22 @@ class PerfilMongoController extends Controller
      * @param integer $_id
      * @return mixed
      */
+    public function actionDeleteFew(){
+        
+        $ids=Yii::$app->request->post('ids');
+        $tiempo_inicio = microtime(true);
+        foreach($ids as $id){
+            
+            PerfilMongo::findOne($id)->delete();
+            //$model->delete();
+        }
+        $tiempo_fin = microtime(true);
+        $mensaje='Tiempo empleado para eliminar '.  count($ids).' tuplas: '
+                .($tiempo_fin-$tiempo_inicio);
+        echo Json::encode($mensaje);
+       // Yii::$app->user->setState('param1', $mensaje);
+       //return $this->redirect(['index','mensaje'=>$mensaje]);
+    }
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();

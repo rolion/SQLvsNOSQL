@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use backend\assets\AppAsset;
+use yii\web\VIEW;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\PerfilMongoSearch */
@@ -9,11 +12,13 @@ use yii\grid\GridView;
 
 $this->title = 'Perfil Mongos';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="perfil-mongo-index">
 
+    
     <h1><?= Html::encode($this->title) ?></h1>
-     <h1><?= Html::encode($mensaje) ?></h1>
+     <h1 id="id-men"><?= Html::encode($mensaje) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -22,22 +27,41 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Cargar', ['perfil-mongo/cargar',], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php Pjax::begin(['timeout'=>5000,'id'=>'myGridId']); ?>
     <p>
-        <?= Html::a('Eliminar Todo', ['perfil-mongo/eliminartodo',], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Eliminar Todo', ['',], ['class' => 'btn btn-success'
+            ,'id'=>'e-id']) ?>
     </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    
+    
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'id'=>'grid',
+             'tableOptions' =>['class' => 'table table-striped table-bordered',
+                ],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            '_id',
-            'nombre_completo',
-            'pais',
-            'email',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
+                '_id',
+                'nombre_completo',
+                'pais',
+                'email',
+                [
+                    'class'=>'yii\grid\CheckboxColumn',
+                    'name'=>'grid',
+                    'checkboxOptions' => function ($model, $key, $index, $column) {
+                        return ['id'=>'selection-id',];
+                    }
+                    ],
+                ['class' => 'yii\grid\ActionColumn'],
+            ],
+        ]); ?>
+  
+   
+    <?php Pjax::end(); ?>
 </div>
+<?php 
+AppAsset::register($this);
+$this->registerJs('pruebajs.js',VIEW::POS_READY);
+?>

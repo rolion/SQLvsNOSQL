@@ -5,6 +5,18 @@
  */
 
 $('#e-id').on('click',function() {
-    var keys = $('#grid').yiiGridView('getSelectedRows');
-    alert(keys);
+    var ids = $('#grid').yiiGridView('getSelectedRows');
+    var ajaxRequest=$.ajax({
+            type:"POST",
+            url:"index.php?r=perfil-mongo/delete-few",
+            dataType:"json",
+            data:{ids:ids}
+            });
+    ajaxRequest.done(function(mensaje){
+       // $('#id-men').text(mensaje);
+        
+        $.pjax.reload({url:"index.php?r=perfil-mongo/index&mensaje="+mensaje,container:'#grid'}); 
+    });
+
+   
 });

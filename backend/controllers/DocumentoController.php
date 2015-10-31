@@ -96,18 +96,7 @@ class DocumentoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionViewpd($id,$mensaje=""){
-        $persona=  Persona::findOne($id);
-        $dataProvider=new ActiveDataProvider([
-                'query' => Documento::find()
-                ->where(['id_persona'=>$id])
-                ->orderBy('id'),]);
-        
-        return $this->render('viewpd', 
-                ['dataProvider' => $dataProvider,
-                'persona'=>$persona,
-                'mensaje' =>  $mensaje]);
-    }
+    
 
     public function actionCreate() {
         set_time_limit(0);
