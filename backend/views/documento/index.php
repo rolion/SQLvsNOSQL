@@ -29,9 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'nombre_completo',
-            'pais',
-            'email:email',
+            'nombre_documento',
+            'fecha_creacion',
+            [
+                'attribute' => 'direccion_archivo',
+                'format' => 'html',    
+                'value' => function ($data) {
+                    return  Html::img($data->imageUrl,['width'=>'100','height'=>'100']);
+                },
+            ],
             [
                 'class'=>'yii\grid\CheckboxColumn',
                 'name'=>'grid',

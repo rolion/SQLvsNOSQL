@@ -39,16 +39,16 @@ class DocumentoController extends Controller
         $searchModel = new DocumentoSearch();
         $persona=new Persona();
         $personaSearch=new PersonaSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider=new ActiveDataProvider([
-                    'query' => Persona::find()
-                        ->innerJoin('documento',
-                        '`documento`.`id_persona`=`persona`.`id`')
-                        ->groupBy('id'),
-                    'pagination' => [
-                        'pageSize' => 20,
-                    ],
-                ]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        $dataProvider=new ActiveDataProvider([
+//                    'query' => Persona::find()
+//                        ->innerJoin('documento',
+//                        '`documento`.`id_persona`=`persona`.`id`')
+//                        ->groupBy('id'),
+//                    'pagination' => [
+//                        'pageSize' => 20,
+//                    ],
+//                ]);
         return $this->render('index', [
             'searchModel' => $personaSearch,
             'dataProvider' => $dataProvider,
@@ -79,15 +79,16 @@ class DocumentoController extends Controller
      */
     public function actionView($id, $mensaje="")
     {
-        $persona=  Persona::findOne($id);
+        $documento=  Documento::findOne($id);
         $dataProvider=new ActiveDataProvider([
                 'query' => Documento::find()
-                ->where(['id_persona'=>$id])
-                ->orderBy('id'),]);
+//                ->where(['id_persona'=>$id])
+//                ->orderBy('id'),
+            ]);
         
         return $this->render('view', 
-                ['dataProvider' => $dataProvider,
-                'persona'=>$persona,
+                [
+                'documento'=>$documento,
                 'mensaje' =>  $mensaje]);
     }
 
@@ -98,19 +99,41 @@ class DocumentoController extends Controller
      */
     
 
-    public function actionCreate() {
-        set_time_limit(0);
+    public function actionCreate(){
+        $tiempo_de_inicio=  microtime(true);
+        $model = new Documento();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->docFile = UploadedFile::getInstance($model, 'docFile');
+            $model->direccion_archivo = $model->docFile->baseName . '.' .
+                        $model->docFile->extension;
+            $path = Yii::$app->basePath . '/web/imagenes/' . $model->direccion_archivo;
+            $model->fecha_creacion = date('Y-m-d H:i:s');
+            $tiempo_de_inicio=  microtime(true);
+            $model->save();
+            $model->docFile->saveAs($path);
+             $tiempo_fin=  microtime(true);
+            $mensaje="Tiempo empleado para crear un dato nuevo: " .($tiempo_fin - $tiempo_de_inicio);
+            $this->redirect(['view','id'=>$model->id,
+                'mensaje'=>$mensaje]);
+        }  else {
+             return $this->render('create', [
+                        'model' => $model,    
+            ]);
+        }
+    }
+    public function actionCargar() {
+       // set_time_limit(0);
         $tiempo_de_inicio=  microtime(true);
         $model = new Documento();
         if ($model->load(Yii::$app->request->post())) {
             $model->docFile = UploadedFile::getInstances($model, 'docFile');
             foreach ($model->docFile as $i => $file) {
                 $documento = new Documento();
-                $documento->id_persona = $model->id_persona;
+               // $documento->id_persona = $model->id_persona;
                 $documento->direccion_archivo = $file->baseName . '.' .
                         $file->extension;
                 $path = Yii::$app->basePath . '/web/imagenes/' . $documento->direccion_archivo;
-                $documento->nombre_documento = $file->baseName;
+               // $documento->nombre_documento = $file->baseName;
                 $documento->fecha_creacion = date('Y-m-d H:i:s');
                 $documento->save();
                 $file->saveAs($path);
@@ -118,7 +141,7 @@ class DocumentoController extends Controller
             $tiempo_fin=  microtime(true);
             $mensaje="Tiempo empleado para cargar datos: " .($tiempo_fin - $tiempo_de_inicio);
         //return $this->render('Tiempo',['mensaje' =>$mensaje]);
-            $this->redirect(['view', 'id' => $model->id_persona,
+            $this->redirect(['index', 
                 'mensaje' =>  $mensaje
                 ]);
             

@@ -3,14 +3,14 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\PerfilMongo */
+/* @var $model backend\models\Asset */
 
-$this->title = 'Actualizar Persona Mongo: ' . ' ' . $model->_id;
-$this->params['breadcrumbs'][] = ['label' => 'Perfil Mongos', 'url' => ['index']];
+$this->title = 'Actualizat Documento Mongo: ' . ' ' . $model->_id;
+$this->params['breadcrumbs'][] = ['label' => 'Assets', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->_id, 'url' => ['view', 'id' => (string)$model->_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="perfil-mongo-update">
+<div class="asset-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

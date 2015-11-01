@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\PerfilMongo */
 
-$this->title = 'Create Perfil Mongo';
+$this->title = 'Crear Persona Mongo';
 $this->params['breadcrumbs'][] = ['label' => 'Perfil Mongos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

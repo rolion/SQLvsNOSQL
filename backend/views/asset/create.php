@@ -4,16 +4,16 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Documento */
+/* @var $model backend\models\Asset */
 
-$this->title = 'Crear Documento';
-$this->params['breadcrumbs'][] = ['label' => 'Documentos', 'url' => ['index']];
+$this->title = 'Crear Documento Mongo';
+$this->params['breadcrumbs'][] = ['label' => 'Assets', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="documento-create">
+<div class="asset-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    
+
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

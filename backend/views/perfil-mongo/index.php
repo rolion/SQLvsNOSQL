@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel backend\models\PerfilMongoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Perfil Mongos';
+$this->title = 'Persona Mongo';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -27,19 +27,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Cargar', ['perfil-mongo/cargar',], ['class' => 'btn btn-success']) ?>
     </p>
-    <?php Pjax::begin(['timeout'=>5000,'id'=>'myGridId']); ?>
+    <?php Pjax::begin(['timeout'=>5000,'id'=>'id-pjax-mongo']); ?>
     <p>
-        <?= Html::a('Eliminar Todo', ['',], ['class' => 'btn btn-success'
-            ,'id'=>'e-id']) ?>
+        <?= Html::a('Eliminar Seleccion', ['',], ['class' => 'btn btn-success'
+            ,'id'=>'id-mongo-link']) ?>
     </p>
     
     
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'id'=>'grid',
-             'tableOptions' =>['class' => 'table table-striped table-bordered',
-                ],
+            'id'=>'id-grid-mongo',
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
@@ -49,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'email',
                 [
                     'class'=>'yii\grid\CheckboxColumn',
-                    'name'=>'grid',
+                    'name'=>'id-grid-mongo',
                     'checkboxOptions' => function ($model, $key, $index, $column) {
                         return ['id'=>'selection-id',];
                     }
@@ -59,9 +57,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
   
    
-    <?php Pjax::end(); ?>
+
 </div>
 <?php 
 AppAsset::register($this);
-$this->registerJs('pruebajs.js',VIEW::POS_READY);
+$this->registerJs('MyScript.js',VIEW::POS_READY);
 ?>

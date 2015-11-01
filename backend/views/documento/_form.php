@@ -14,22 +14,14 @@ use kartik\file\FileInput;
 <div class="documento-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?> 
-    <?= $form->field($model, 'id_persona')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Persona::find()->all(), 'id', 'nombre_completo'),
-        'language' => 'en',
-        'options' => ['placeholder' => 'nombre ...'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-        //'pluginLoading'=>false,
-    ])?>
+    <?= $form->field($model, 'nombre_documento')?>
     <?= FileInput::widget(
         [
         'model'=>$model,
-        'attribute' => 'docFile[]',
+        'attribute' => 'docFile',
         'options' => [
                     'accept' => 'image/*',
-                    'multiple' => true
+                    //'multiple' => true
             ],
         ]);
     ?>

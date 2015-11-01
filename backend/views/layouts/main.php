@@ -38,6 +38,8 @@ AppAsset::register($this);
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Persona', 'url' => ['/persona/index']],
         ['label' => 'Documento', 'url' => ['/documento/index']],
+        ['label' => 'Persona Mongo', 'url' => ['/perfil-mongo/index']],
+        ['label' => 'Documento Mongo', 'url' => ['/asset/index']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];

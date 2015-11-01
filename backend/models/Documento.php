@@ -32,7 +32,7 @@ class Documento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'id_persona',], 'required'],
+           // [[ 'id_persona',], 'required'],
             [['fecha_creacion',], 'safe'],
             [['docFile'],'file'],
             [['direccion_archivo'], 'string'],
@@ -48,7 +48,7 @@ class Documento extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombre_documento' => 'Nombre Documento',
+            'nombre_documento' => 'Descripcion',
             'fecha_creacion' => 'Fecha Creacion',
             'direccion_archivo' => 'Imagen',
             'id_persona' => 'Persona',

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use backend\assets\AppAsset;
 use yii\web\VIEW;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\PersonaSearch */
@@ -25,37 +26,41 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Cargar', ['persona/cargar',], ['class' => 'btn btn-success']) ?>
     </p>
     <p>
-        <?= Html::a('ELiminar', ['persona/index',], ['class' => 'btn btn-success','id'=>'e-id']) ?>
+        <?= Html::a('ELiminar Todo', ['persona/delete-all',], ['class' => 'btn btn-success','id'=>'e-id']) ?>
+    </p>
+     <?php Pjax::begin(['timeout'=>10000,'id'=>'id-sql-pjax']); ?>
+    <p>
+        <?= Html::a('Eliminar Seleccion', ['',], ['class' => 'btn btn-success'
+            ,'id'=>'id-sql-link']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'id'=>'grid',
+        'id'=>'id-grid-sql',
         'tableOptions' =>['class' => 'table table-striped table-bordered',
-            'id'=>'grid'],
+            'id'=>'id-grid-sql'],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'nombre_completo',
             'pais',
             'email:email',
             [
                 'class'=>'yii\grid\CheckboxColumn',
-                'name'=>'grid',
-                
+                'name'=>'id-grid-sql',
                 'checkboxOptions' => function ($model, $key, $index, $column) {
                     return ['id'=>'selection-id',];
                 }
-                ],
+            ],
             
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-    <?php 
-AppAsset::register($this);
-$this->registerJs('myscript.js',VIEW::POS_READY);
+    <?php Pjax::end(); ?>
+<?php 
+    AppAsset::register($this);
+    $this->registerJs('MyScript.js',VIEW::POS_READY);
 ?>
 
 </div>

@@ -53,10 +53,6 @@ class PerfilMongoController extends Controller
     }
     public function actionIndex($mensaje="")
     {
-//        //if(strcmp($mensaje,"")==0)
-//            $mensaje=Yii::$app->request->post('mensaje');
-//        if(strcmp($mensaje,"")==0)
-//            $mensaje=  Yii::$app->request->post('mensaje');
         $searchModel = new PerfilMongoSearch();
         $dataProvider = new ActiveDataProvider([
                     'query' => PerfilMongo::find()->orderBy('_id'),
