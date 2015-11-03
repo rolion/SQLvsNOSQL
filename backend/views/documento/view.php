@@ -26,34 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
     <?= 
-//        GridView::widget([
-//        'dataProvider' => $dataProvider,
-//        'columns' => [
-//           'fecha_creacion',
-//           'nombre_documento',
-//           [
-//                'attribute' => 'direccion_archivo',
-//                'format' => 'html',    
-//                'value' => function ($data) {
-//                    return  Html::img($data->imageUrl,['width'=>'100','height'=>'100']);
-//                },
-//            ]
-//
-//            ]
-//    ])
             DetailView::widget([
             'model' => $documento,
             'attributes' => [
                 'id',
                 'fecha_creacion',
                 'nombre_documento',
-//            [
-//                'attribute' => 'direccion_archivo',
-//                'format' => 'html',    
-//                'value' => function ($data) {
-//                    return  Html::img($data->imageUrl,['width'=>'100','height'=>'100']);
-//                },
-//            ]
               [
                     'attribute'=>'direccion_archivo',
                     'value'=>$documento->imageUrl,

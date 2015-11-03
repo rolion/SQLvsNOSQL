@@ -19,17 +19,13 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <h1><?= Html::encode($this->title) ?></h1>
      <h1 id="id-men"><?= Html::encode($mensaje) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Perfil Mongo', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('Cargar', ['perfil-mongo/cargar',], ['class' => 'btn btn-success']) ?>
-    </p>
     <?php Pjax::begin(['timeout'=>5000,'id'=>'id-pjax-mongo']); ?>
     <p>
+         <?= Html::a('Crear Persona', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Cargar', ['perfil-mongo/cargar',], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Eliminar Seleccion', ['',], ['class' => 'btn btn-success'
+            ,'id'=>'id-mongo-link']) ?>
+        <?= Html::a('Borrar todo', ['perfil-mongo/delete-all',], ['class' => 'btn btn-success'
             ,'id'=>'id-mongo-link']) ?>
     </p>
     
@@ -57,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
   
    
-
+    <?php Pjax::end(); ?>
 </div>
 <?php 
 AppAsset::register($this);

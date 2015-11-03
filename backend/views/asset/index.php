@@ -17,18 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <h1><?= Html::encode($mensaje) ?></h1>
-    <p>
-        <?= Html::a('Create Asset', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('Cargar', ['asset/cargar'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('Borrar Todo', ['asset/delete-all'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?php Pjax::begin(['timeout' => 5000, 'id' => 'id-pjax-mongo']); ?>
     <p>
+        <?= Html::a('Crear Documento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Cargar', ['asset/cargar'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Borrar Seleccion', [''], ['class' => 'btn btn-success', 'id' => 'id-asset-link']) ?>
+        <?= Html::a('Borrar Todo', ['asset/delete-all'], ['class' => 'btn btn-success']) ?>
     </p>
     <?=
     GridView::widget([

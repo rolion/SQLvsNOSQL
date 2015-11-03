@@ -34,6 +34,17 @@ class PerfilMongoController extends Controller
      * Lists all PerfilMongo models.
      * @return mixed
      */
+    public function actionDeleteAll(){
+        $tiempo_inicio = microtime(true);
+        $model=  PerfilMongo::find()->all();
+        foreach($model as $i=>$persona){
+            $persona->delete();
+        }
+        $tiempo_fin = microtime(true);
+        $mensaje = 'Tiempo empleado para eliminar ' . count($model) . ' tuplas: '
+                . ($tiempo_fin - $tiempo_inicio);
+        $this->redirect(['index','mensaje'=>$mensaje]);
+    }
     public function actionCargar(){
        // $model=new PerfilMongo();
         $cantidad=1000;

@@ -13,7 +13,8 @@ $('#id-mongo-link').on('click',function() {
             data:{ids:ids}
             });
     ajaxRequest.done(function(mensaje){
-        $.pjax.reload({url:"index.php?r=perfil-mongo/index&mensaje="+mensaje,container:'#id-grid-mongo'}); 
+        $.pjax.reload({url:"index.php?r=perfil-mongo/index&mensaje="+mensaje,
+                container:'#id-grid-mongo'}); 
     });
 
    
@@ -45,6 +46,23 @@ $('#id-asset-link').on('click',function() {
             });
     ajaxRequest.done(function(mensaje){
         $.pjax.reload({url:"index.php?r=asset/index&mensaje="+mensaje,container:'#id-grid-asset-mongo'}); 
+    });
+    ajaxRequest.fail(function(jqXHR, textStatus){
+        alert('jqXHR: '+jqXHR+ 'textStatus: '+textStatus);
+    });
+
+   
+});
+$('#id-documento-link').on('click',function() {
+    var ids = $('#id-grid-documento-mongo').yiiGridView('getSelectedRows');
+    var ajaxRequest=$.ajax({
+            type:"POST",
+            url:"index.php?r=documento/delete-selected",
+            dataType:"json",
+            data:{ids:ids}
+            });
+    ajaxRequest.done(function(mensaje){
+        $.pjax.reload({url:"index.php?r=documento/index&mensaje="+mensaje,container:'#id-grid-documento-mongo'}); 
     });
     ajaxRequest.fail(function(jqXHR, textStatus){
         alert('jqXHR: '+jqXHR+ 'textStatus: '+textStatus);

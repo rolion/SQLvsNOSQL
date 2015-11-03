@@ -12,7 +12,7 @@ use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 use backend\models\Persona;
 use backend\models\PersonaSearch;
-
+use  \yii\helpers\Json;
 /**
  * DocumentoController implements the CRUD actions for Documento model.
  */
@@ -40,36 +40,11 @@ class DocumentoController extends Controller
         $persona=new Persona();
         $personaSearch=new PersonaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        $dataProvider=new ActiveDataProvider([
-//                    'query' => Persona::find()
-//                        ->innerJoin('documento',
-//                        '`documento`.`id_persona`=`persona`.`id`')
-//                        ->groupBy('id'),
-//                    'pagination' => [
-//                        'pageSize' => 20,
-//                    ],
-//                ]);
         return $this->render('index', [
             'searchModel' => $personaSearch,
             'dataProvider' => $dataProvider,
             'mensaje'=>$mensaje,
         ]);
-    }
-    public function actionIndexp(){
-        $model=new Documento();
-        if ($model->load(Yii::$app->request->post())) {
-                $dataProvider=new ActiveDataProvider([
-                    'query' => Documento::find()
-                        ->where(['id_persona'=>$model->id_persona])
-                        ->orderBy('id'),
-                    'pagination' => [
-                        'pageSize' => 1000000,
-                    ],
-                ]);
-             return $this->render('indexp',['model'=>$model,
-                 'dataProvider'=>$dataProvider]);
-        }
-        return $this->render('indexp',['model'=>$model,'dataProvider'=>NULL]);
     }
 
     /**
@@ -98,7 +73,27 @@ class DocumentoController extends Controller
      * @return mixed
      */
     
-
+        public function actionDeleteAll(){
+            $tiempo_de_inicio=  microtime(true);
+            $model=  Documento::find()->all();
+            foreach($model as $i =>$doc){
+                $doc->delete();
+            }
+            $tiempo_fin=  microtime(true);
+            $mensaje="Tiempo empleado para eliminar ". count($model)." tuplas: " .($tiempo_fin - $tiempo_de_inicio);
+            $this->redirect(['index','mensaje'=>$mensaje]);
+        }
+        public function actionDeleteSelected(){
+            $ids=Yii::$app->request->post('ids');
+            $tiempo_inicio = microtime(true);
+            foreach($ids as $id){
+                Documento::findOne($id)->delete();
+            }
+            $tiempo_fin = microtime(true);
+            $mensaje='Tiempo empleado para eliminar '.  count($ids).' tuplas: '
+                    .($tiempo_fin-$tiempo_inicio);
+            echo Json::encode($mensaje);
+        }
     public function actionCreate(){
         $tiempo_de_inicio=  microtime(true);
         $model = new Documento();
@@ -111,7 +106,7 @@ class DocumentoController extends Controller
             $tiempo_de_inicio=  microtime(true);
             $model->save();
             $model->docFile->saveAs($path);
-             $tiempo_fin=  microtime(true);
+            $tiempo_fin=  microtime(true);
             $mensaje="Tiempo empleado para crear un dato nuevo: " .($tiempo_fin - $tiempo_de_inicio);
             $this->redirect(['view','id'=>$model->id,
                 'mensaje'=>$mensaje]);
@@ -139,14 +134,14 @@ class DocumentoController extends Controller
                 $file->saveAs($path);
             }
             $tiempo_fin=  microtime(true);
-            $mensaje="Tiempo empleado para cargar datos: " .($tiempo_fin - $tiempo_de_inicio);
+            $mensaje="Tiempo empleado para cargar".count($model->docFile)." tuplas: " .($tiempo_fin - $tiempo_de_inicio);
         //return $this->render('Tiempo',['mensaje' =>$mensaje]);
             $this->redirect(['index', 
                 'mensaje' =>  $mensaje
                 ]);
             
         } else {
-            return $this->render('create', [
+            return $this->render('cargar', [
                         'model' => $model,
                 
             ]);

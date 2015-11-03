@@ -35,6 +35,9 @@ class AssetController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Asset::find(),
+            'pagination' => [
+                        'pageSize' => 100,
+                    ],
         ]);
 
         return $this->render('index', [

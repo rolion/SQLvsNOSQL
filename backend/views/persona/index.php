@@ -17,21 +17,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <h1><?=$mensaje?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Persona', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('Cargar', ['persona/cargar',], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('ELiminar Todo', ['persona/delete-all',], ['class' => 'btn btn-success','id'=>'e-id']) ?>
-    </p>
      <?php Pjax::begin(['timeout'=>10000,'id'=>'id-sql-pjax']); ?>
     <p>
+        <?= Html::a('Create Persona', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Cargar', ['persona/cargar',], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Eliminar Seleccion', ['',], ['class' => 'btn btn-success'
             ,'id'=>'id-sql-link']) ?>
+        <?= Html::a('ELiminar Todo', ['persona/delete-all',], ['class' => 'btn btn-success','id'=>'e-id']) ?>
     </p>
 
     <?= GridView::widget([
